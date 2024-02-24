@@ -2,15 +2,14 @@
 
 A Pinyin converter for Hungarian, French and German.
 
+## Command line
+
 Command line version usage:<br/>
 `python.exe pinyin_converter.py [parameters]`<br/>
 
 The settings can be adjusted as command line parameters or by editing the _config.json_ file.
 
-GUI version usage:<br/>
-`python.exe widget.py`<br/>
-
-## Command line parameters
+### Command line parameters
 
 > [!TIP]
 > The parameters can be added in any order.
@@ -35,7 +34,28 @@ _Hyphen options_<br/>
 **`save`** &ensp; Saves the command line parameters to the _config.json_ file.<br/>
 <br/>
 _`new_syllable_data_filename.json`_ &ensp; New data file containing syllables. (By default, the program works with _syllables.json_)<br/>
+
+## GUI
+
+GUI version usage:<br/>
+`python.exe widget.py`<br/>
+
+> [!TIP]
+> The GUI version uses Qt6, so Pyside6 is required.<br/>
+> The best if we create and activate a virtual environment for that:
+> 
+> ```
+> python.exe -m venv venv
+> venv/Scripts/activate.bat
+> ```
+>
+> After that we can install it:<br/>
+>
+> `pip install Pyside6`
+
 <br/>
 <br/>
+
 > [!NOTE]
-> The program uses [this syllable table](https://terebess.hu/keletkultinfo/atiras/atiras.html) for the conversion.
+> The program uses [this table](https://terebess.hu/keletkultinfo/atiras/atiras.html) for the conversion.
+
