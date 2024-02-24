@@ -27,10 +27,10 @@ _Clipboard_<br/>
 **`nocopy`** &ensp; Does not copy the result to the clipboard. &emsp; `"copy": false`<br />
 <br/>
 _Hyphen options_<br/>
-**`hyphen`** &ensp; Use hyphen between syllables of a first name. &emsp; ${\text{\color{red}default}}$<br/>
-**`nohyphen`** &ensp; Do not use hyphens.<br/>
-**`oneword`** &ensp; Use hyphens even if the name is only one word.<br/>
-**`lastword`** &ensp; Use hyphens only if the name has more than one word. &emsp; ${\text{\color{red}default}}$<br/>
+**`hyphen`** &ensp; Uses hyphen between syllables of a first name. &emsp; `"use_hyphen": true` &emsp; ${\text{\color{red}default}}$<br/>
+**`nohyphen`** &ensp; Does not use hyphen. &emsp; `"use_hyphen": false`<br/>
+**`oneword`** &ensp; Uses hyphen even if the name is only one word. &emsp; `"one_word": true`<br/>
+**`lastword`** &ensp; Uses hyphen only if the name has more than one word. &emsp; `"one_word": false` &emsp; ${\text{\color{red}default}}$<br/>
 <br/>
 **`save`** &ensp; Saves the command line parameters to the _config.json_ file.<br/>
 <br/>
