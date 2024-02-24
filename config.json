@@ -1,8 +1,8 @@
 {
-    "method": "h1",
+    "language": "h1",
     "copy": true,
     "filename": "syllables.json",
-    "valid_methods": [
+    "valid_languages": [
         {
             "code": "h1",
             "name": "Hungarian (Popular)"

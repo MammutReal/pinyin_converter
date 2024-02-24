@@ -1,8 +1,8 @@
 import sys
 import json
 
-from PySide6.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLineEdit, QPushButton, QLabel, QRadioButton, QButtonGroup, QCheckBox
-from PySide6.QtCore import Qt
+from PySide6.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLineEdit, QPushButton, QLabel, QRadioButton, QButtonGroup, QCheckBox, QFileDialog
+from PySide6.QtCore import Qt, QDir
 from PySide6.QtGui import QClipboard
 
 from pinyin_converter import PinyinConverter
@@ -16,12 +16,12 @@ class Widget(QWidget):
         self.setWindowTitle("Pinyin converter")
 
         self.config = json.load(open("config.json"))
-
         self.converter = PinyinConverter(self.config["language"], self.config["filename"])
 
         main_layout = QVBoxLayout()
         self.setLayout(main_layout)
 
+        # main editLine, go button and result label
         line_layout = QHBoxLayout()
         self.edit = QLineEdit(self)
         line_layout.addWidget(self.edit)
@@ -33,10 +33,13 @@ class Widget(QWidget):
         self.label = QLabel(self)
         main_layout.addWidget(self.label)
 
+        # button can be clicked or return can be pressed inside the lineEdit
+        # the label can be selectable for manual clipboard feature, if the auto clipboard feature is disabled
         go.clicked.connect(self.onGo)
         self.edit.returnPressed.connect(self.onGo)
         self.label.setTextInteractionFlags(Qt.TextSelectableByMouse)        
 
+        # language setting controls
         langLayout = QHBoxLayout()
         languageGroup = QButtonGroup(self)
         for i in range(0, len(self.config["valid_languages"])):
@@ -52,6 +55,7 @@ class Widget(QWidget):
 
         main_layout.addLayout(langLayout)
 
+        # clipboard setting control
         self.clipboard = QCheckBox("Copy result to the clipboard", self)
         if self.config["copy"]:
             self.clipboard.setCheckState(Qt.CheckState.Checked)
@@ -59,6 +63,7 @@ class Widget(QWidget):
 
         main_layout.addWidget(self.clipboard)
 
+        # hyphen setting controls
         hyphen_layout = QHBoxLayout()
         self.hyphen = QCheckBox("Add hyphen to last names", self)
         self.oneword = QCheckBox("Only last part", self)
@@ -75,6 +80,17 @@ class Widget(QWidget):
 
         main_layout.addLayout(hyphen_layout)
 
+        # data file setting controls
+        filename_layout = QHBoxLayout()
+        self.filename = QLabel("Data file: <i>" + self.config["filename"] + "</i>", self)
+        filename_layout.addWidget(self.filename)
+        browse = QPushButton("...", self)
+        filename_layout.addWidget(browse)
+        browse.clicked.connect(self.onBrowse)
+
+        main_layout.addLayout(filename_layout)
+
+        # save button for saving config, it's disabled at first
         self.save = QPushButton("Save settings", self)
         self.save.setEnabled(False)
         self.save.clicked.connect(self.onSave)
@@ -86,6 +102,8 @@ class Widget(QWidget):
 
         name = self.converter.convert(text, self.config["hyphen_options"])
         self.label.setText(name)
+        
+        # copy the result to the clipboard if it's enabled
         if self.config["copy"]:
             cb = QClipboard()
             cb.setText(name)
@@ -93,9 +111,11 @@ class Widget(QWidget):
     def onLanguage(self, id):
         self.config["language"] = self.config["valid_languages"][id]["code"]
 
+        # re-set the converter and change the result
         self.converter.setup(self.config["language"], self.config["filename"])
         self.onGo()
 
+        # enable the Save button
         if not self.dirty:
             self.dirty = True
             self.save.setEnabled(True)
@@ -106,6 +126,7 @@ class Widget(QWidget):
         else:
             self.config["copy"] = False
 
+        # enable the Save button
         if not self.dirty:
             self.dirty = True
             self.save.setEnabled(True)
@@ -118,6 +139,7 @@ class Widget(QWidget):
             self.config["hyphen_options"]["use_hyphen"] = False
             self.oneword.setEnabled(False)
 
+        # enable the Save button
         if not self.dirty:
             self.dirty = True
             self.save.setEnabled(True)
@@ -128,18 +150,41 @@ class Widget(QWidget):
         else:
             self.config["hyphen_options"]["one_word"] = True
 
+        # enable the Save button
         if not self.dirty:
             self.dirty = True
             self.save.setEnabled(True)
+
+    def onBrowse(self):
+        filename = QFileDialog.getOpenFileName(self, "Open data file", QDir.currentPath(), "JSON files (*.json)")[0]
+        if filename != "":
+            # if the path is the same as the working path, we remove the directory and save only the filename itself
+            fname = filename.split("/")[-1]
+            dir = filename[:len(filename)-len(fname)]
+            if dir == QDir.currentPath() + "/":
+                filename = fname
+
+            # set the new data file name and re-set the converter
+            self.config["filename"] = filename
+            self.filename.setText("Data file: <i>" + self.config["filename"] + "</i>")
+
+            self.converter.setup(self.config["language"], self.config["filename"])
+
+            # enable the Save button
+            if not self.dirty:
+                self.dirty = True
+                self.save.setEnabled(True)
 
     def onSave(self):
         if not self.dirty:
             self.save.setEnabled(False)
             return
         
+        # saving config
         with open('config.json', 'w', encoding='utf-8') as f:
             json.dump(self.config, f, ensure_ascii=False, indent=4)
 
+        # disable the Save button
         self.dirty = False
         self.save.setEnabled(False)
 

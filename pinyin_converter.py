@@ -10,20 +10,20 @@ class PinyinConverter:
     FRENCH = "fr"
     GERMAN = "de"
 
-    def __init__(self, method=POPULAR, filename="syllables.json"):
+    def __init__(self, language=POPULAR, filename="syllables.json"):
         self._map = {}
         self._syllables = ""
 
-        self.setup(method, filename)
+        self.setup(language, filename)
 
-    def setup(self, method=POPULAR, filename="syllables.json"):
+    def setup(self, language=POPULAR, filename="syllables.json"):
         file = open(filename, encoding="utf-8")
         data = json.load(file)
 
         self._map = {}
         syllables = []
         for s in data:
-            self._map[s["p"]] = s[method]
+            self._map[s["p"]] = s[language]
             syllables.append(s["p"])
 
         # ! the sorting is only needed if the json file was edited and the order of syllables changed
@@ -53,7 +53,6 @@ class PinyinConverter:
                 result = re.findall(self._syllables, word, re.IGNORECASE)
 
             res = ""
-            # result[0] = result[0].title()
             for r in result:
                 r = re.sub(r'\W+', '', r)
                 if r in self._map.keys():
@@ -89,10 +88,10 @@ if __name__ == "__main__":
     # read arguments and override config data
     save = False
     argv = sys.argv
-    valid_methods = [v["code"] for v in config["valid_methods"]] # we create a list from the valid methods list of dictionaries
+    valid_languages = [v["code"] for v in config["valid_languages"]] # we create a list from the valid methods list of dictionaries
     for i in range(1, len(argv)):
-        if argv[i] in valid_methods:
-            config["method"] = argv[i]
+        if argv[i] in valid_languages:
+            config["language"] = argv[i]
 
         elif argv[i] == "copy":
             config["copy"] = True
@@ -120,7 +119,7 @@ if __name__ == "__main__":
             json.dump(config, f, ensure_ascii=False, indent=4)
 
     # init the converter
-    converter = PinyinConverter(config["method"], config["filename"])
+    converter = PinyinConverter(config["language"], config["filename"])
 
     while True:
         # we ask for a name
