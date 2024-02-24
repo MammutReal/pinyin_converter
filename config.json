@@ -1,0 +1,31 @@
+{
+    "method": "h1",
+    "copy": true,
+    "filename": "syllables.json",
+    "valid_methods": [
+        {
+            "code": "h1",
+            "name": "Hungarian (Popular)"
+        },
+        {
+            "code": "h2",
+            "name": "Hungarian (Academic)"
+        },
+        {
+            "code": "en",
+            "name": "English (Wade-Giles)"
+        },
+        {
+            "code": "fr",
+            "name": "French (E.F.E.O)"
+        },
+        {
+            "code": "de",
+            "name": "German (Lessing-Othmer)"
+        }
+    ],
+    "hyphen_options": {
+        "use_hyphen": true,
+        "one_word": false
+    }
+}
