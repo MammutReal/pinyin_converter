@@ -35,5 +35,7 @@ _Hyphen options_<br/>
 **`save`** &ensp; Saves the command line parameters to the _config.json_ file.<br/>
 <br/>
 _`new_syllable_data_filename.json`_ &ensp; New data file containing syllables. (By default, the program works with _syllables.json_)<br/>
-
-
+<br/>
+<br/>
+> [!NOTE]
+> The program uses [this syllable table](https://terebess.hu/keletkultinfo/atiras/atiras.html) for the conversion.
